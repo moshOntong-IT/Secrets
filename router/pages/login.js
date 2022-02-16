@@ -1,5 +1,6 @@
 const express = require("express");
 const User = require("../../models/userSchema.js");
+const md5 = require("md5");
 
 const loginRouter = express.Router();
 
@@ -18,7 +19,7 @@ loginRouter
                 console.log(err.message);
             } else {
                 if (result) {
-                    if (result.password === password) {
+                    if (result.password === md5(password)) {
                         res.render("secrets");
                     } else {
                         console.log("Invalid Account");

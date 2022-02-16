@@ -2,6 +2,7 @@ const express = require("express");
 const User = require("../../models/userSchema.js");
 
 const registerRouter = express.Router();
+const md5 = require("md5");
 
 registerRouter
     .route("/")
@@ -12,7 +13,7 @@ registerRouter
         const { username, password } = req.body;
         // console.log(username + " " + password);
 
-        User.create({ email: username, password: password }, (err, result) => {
+        User.create({ email: username, password: md5(password) }, (err, result) => {
             // console.log(result);
             if (!err) {
                 console.log("Successfully, register user");
