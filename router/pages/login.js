@@ -1,6 +1,6 @@
 const express = require("express");
 const User = require("../../models/userSchema.js");
-const md5 = require("md5");
+const bcrypt = require("bcrypt");
 
 const loginRouter = express.Router();
 
@@ -19,12 +19,18 @@ loginRouter
                 console.log(err.message);
             } else {
                 if (result) {
-                    if (result.password === md5(password)) {
-                        res.render("secrets");
-                    } else {
-                        console.log("Invalid Account");
-                        res.redirect("/login");
-                    }
+                    bcrypt.compare(
+                        password,
+                        result.password,
+                        function(hashErr, hashResult) {
+                            if (hashResult === true) {
+                                res.render("secrets");
+                            } else {
+                                console.log(hashErr.message);
+                                res.redirect("/login");
+                            }
+                        }
+                    );
                 } else {
                     console.log("Not registered yet");
                     res.redirect("/login");

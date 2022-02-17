@@ -2,7 +2,9 @@ const express = require("express");
 const User = require("../../models/userSchema.js");
 
 const registerRouter = express.Router();
-const md5 = require("md5");
+const bcrypt = require("bcrypt");
+
+const saltRounds = 10;
 
 registerRouter
     .route("/")
@@ -13,16 +15,17 @@ registerRouter
         const { username, password } = req.body;
         // console.log(username + " " + password);
 
-        User.create({ email: username, password: md5(password) }, (err, result) => {
-            // console.log(result);
-            if (!err) {
-                console.log("Successfully, register user");
-            } else {
-                console.log(err.message);
-            }
+        bcrypt.hash(password, saltRounds, function(hashErr, hash) {
+            User.create({ email: username, password: hash }, (err, result) => {
+                // console.log(result);
+                if (!err) {
+                    console.log("Successfully, register user");
+                    res.render("secrets");
+                } else {
+                    console.log(err.message);
+                }
+            });
         });
-
-        res.render("secrets");
     });
 
 module.exports = registerRouter;
