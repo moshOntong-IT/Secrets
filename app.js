@@ -7,7 +7,6 @@ const registerRouter = require("./router/pages/signup.js");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
-const passportMongoose = require("passport-local-mongoose");
 
 const app = express();
 
